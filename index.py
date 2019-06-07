@@ -85,28 +85,28 @@ val_xT = testData[columns]
 train_X, val_X, train_y, val_y = train_test_split(X, y, random_state=1)
 
 val_y_size = val_y.size
-# print(val_y_size)
 train_y_size = train_y.size
-# print(val_y_size)
 train_X = [train_X]
 train_y = [train_y]
 val_X = [val_X]
 val_y = [val_y]
 
 # Create and predict with the model
-model = LogisticRegression(n_jobs=1, C=1e5)
+model = LogisticRegression(n_jobs=1, C=1e5, solver='lbfgs')
 
-model.fit(train_X.values.reshape(-1, 1), train_y)
+model.fit(train_X, train_y)
 
-prediction = model.predict(val_xT)
 
 # Validate and test the model
 accuTrain = np.sum(model.predict(train_X.values.reshape(-1, 1)) == train_y)/train_y_size
 accuTest = np.sum(model.predict(val_X.values.reshape(-1, 1)) == val_y)/val_y_size
 
-# print("Accuracy Train: ", (accuTrain * 100))
-# print("Accuracy Test: ", (accuTest * 100))
+print("Accuracy Train: ", (accuTrain * 100))
+print("Accuracy Test: ", (accuTest * 100))
+
+
+prediction = model.predict(val_xT)
 
 # Print the output:
-output = pd.DataFrame({"PassengerId":  dfTest.Id, "Survived": prediction})
+output = pd.DataFrame({"Id":  dfTest.Id, "Cover_Type": prediction})
 output.to_csv("./data/output.csv", sep=',', index=False)
